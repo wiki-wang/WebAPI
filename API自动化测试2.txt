@@ -1,0 +1,108 @@
+set()
+	--存放数据的一种格式，可以做减法
+	--例子：
+		main_list = list(set(list2)-set(list1))
+	
+另一种算法：
+	newList = [item for item in courseList2 if item not in courseList1]]
+	
+assert和if的区别：
+	if 仅仅是一个条件表达式
+	assert是一个检查点。判断一个条件表达式成不成成立，如果不满足，就会报错，会抛出异常。
+
+
+环境的初始化操作：
+	保证课程名不唯一：
+		--后面加上时间戳
+		--'python'+time.ctime()  -- import time
+		
+		--'python'+datetime.now()  -- from datetime import datetime
+		
+		--每次添加课程之前，把同名的课程名字删掉
+			courseList0 = list_course()['retlist']
+			
+			for one in courseList0:
+				if one['name'] == 'python':
+					delete_course(one['id'])
+	
+
+鉴权：
+	鉴别是否拥有权限
+	认证+鉴权：用户名密码是否正确，根据用户名判断用户身份，是否有操作权限
+	
+	有session和cookie两种方式，这里主要介绍session。
+	
+	使用用户名密码登录成功后，响应消息体里面会有Set-Cookie，里面有sessionid的内容。
+	Set-Cookie的内容会保存到客户端机器上
+	后续所有的请求，都会在Cookie中把sessionid带上
+	
+	抓包的时候，要点选 preserve log
+	
+	发送请求的时候，服务器判断请求头里面的Cookie字段有没有一个sessionid，这个sessionid是不是刚才登录过的一个有效的sessionid，如果能找到且有效，则有权限执行操作。
+	
+	需要携带sessionid的场景：
+		先登录,登陆成功后，返回消息体，同时返回cookies
+		return ret, response.cookies
+		
+		赋值的时候可以连等：
+			loginRet, cookies = login('auto', 'sdfsdfsdf')
+			
+		获得sessionid：
+		sessionid = cookies['sessionid']
+		
+		携带cookie的做法：
+			方法一： 然后在头部加上cookie，里面有sessionid：
+					headers = {
+					'Cookie': 'sessionid='+sessionid
+					}
+				
+				r = requests.post('http://', data=payload,headers = headers)
+		
+			方法二：
+				r = requests.post('http://', data = payload, cookies = {'sessionid': sessionid})
+			
+			所有的请求头里面都加上cookie的值
+			调用的时候都要带上sessionid
+		
+		sessionid 是 放在请求头 里面的 cookie字段
+		
+		
+作业代码：
+	手动执行用例之前，先要用工具（例如postman）把用例执行的模板创建好
+	
+	对于编程语言来说，这个模板，就是函数。重复要做的事情，要做成函数。
+	
+	创建py文件，对应用例001.py
+	
+	构建请求：
+		请求方法：post
+		url：
+		消息体：
+			form-url-encoded:
+				--用字典 payload={}
+				必须是 参数名:参数值 的形式。
+				参数名、参数值都是字符串
+				
+				在发送的时候，requests库根据data=payload，如果data的值是字典而不是字符串对象，就会自动作为urlencoded格式，每个元素的key作为参数名， value作为参数值，每一个元素代表一个参数
+				
+				params的数据，是放在url里面的，data的数据，是放在消息体中的
+				
+				response.json()
+				转换成python中的数据对象，可能是字典，也可能是列表。
+				
+				
+				
+				
+				
+	
+	import requests
+	
+	requests.post('http://', data=payload)
+	
+	payload={
+	'action':'add_course'
+	'data':''' '''
+	}
+				
+	
+	
